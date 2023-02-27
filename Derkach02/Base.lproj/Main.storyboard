@@ -1,24 +1,134 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13122.16" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13104.12"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="Derkach02" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" xcode11CocoaTouchSystemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="h26-vJ-DMi">
+                                <rect key="frame" x="16" y="59" width="361" height="759"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Username" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f0t-Kw-VVw">
+                                        <rect key="frame" x="8" y="7.9999999999999982" width="78.333333333333329" height="20.333333333333329"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CUq-Lt-NgJ">
+                                        <rect key="frame" x="306.66666666666669" y="8" width="46.333333333333314" height="40"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="40" id="o3O-P4-5gF"/>
+                                        </constraints>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" image="bookmark" catalog="system"/>
+                                        <connections>
+                                            <action selector="onSaveClick:" destination="BYZ-38-t0r" eventType="touchUpInside" id="9z4-Jz-EH7"/>
+                                        </connections>
+                                    </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="n0B-4N-EPn">
+                                        <rect key="frame" x="8" y="56.000000000000007" width="47.333333333333336" height="26.333333333333336"/>
+                                        <fontDescription key="fontDescription" type="system" weight="heavy" pointSize="22"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="252" verticalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="6QA-Nw-jPy">
+                                        <rect key="frame" x="0.0" y="90.333333333333357" width="361" height="128.66666666666663"/>
+                                    </imageView>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0qO-3z-kJp">
+                                        <rect key="frame" x="8" y="227" width="85" height="34.666666666666686"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" image="arrow.up" catalog="system" title="Likes"/>
+                                        <connections>
+                                            <action selector="onLikeClick:" destination="BYZ-38-t0r" eventType="touchUpInside" id="hIh-Ki-jun"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Wy2-UV-km2">
+                                        <rect key="frame" x="261" y="227" width="92" height="34.666666666666686"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" image="square.and.arrow.up" catalog="system" title="Share"/>
+                                        <connections>
+                                            <action selector="onShareClick:" destination="BYZ-38-t0r" eventType="touchUpInside" id="50t-ne-bQa"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="nAg-L0-i5y">
+                                        <rect key="frame" x="155" y="227" width="51" height="34"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" image="message" catalog="system" title="Comms"/>
+                                        <connections>
+                                            <action selector="onCommentClick:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Lm2-DR-WjQ"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" red="0.0" green="0.3872535486811215" blue="0.0041995579230302855" alpha="0.22708227040816326" colorSpace="custom" customColorSpace="displayP3"/>
+                                <constraints>
+                                    <constraint firstItem="f0t-Kw-VVw" firstAttribute="top" secondItem="CUq-Lt-NgJ" secondAttribute="top" id="2Pb-7K-41V"/>
+                                    <constraint firstItem="f0t-Kw-VVw" firstAttribute="top" secondItem="h26-vJ-DMi" secondAttribute="topMargin" id="Clm-Vu-1W2"/>
+                                    <constraint firstItem="0qO-3z-kJp" firstAttribute="top" secondItem="6QA-Nw-jPy" secondAttribute="bottom" constant="8" id="DPD-wa-TpD"/>
+                                    <constraint firstItem="nAg-L0-i5y" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="0qO-3z-kJp" secondAttribute="trailing" constant="8" symbolic="YES" id="Jvu-wY-7eW"/>
+                                    <constraint firstItem="Wy2-UV-km2" firstAttribute="top" secondItem="6QA-Nw-jPy" secondAttribute="bottom" constant="8" id="L8B-93-pG9"/>
+                                    <constraint firstItem="CUq-Lt-NgJ" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="f0t-Kw-VVw" secondAttribute="trailing" constant="8" id="OxP-Nh-8T8"/>
+                                    <constraint firstItem="n0B-4N-EPn" firstAttribute="top" secondItem="CUq-Lt-NgJ" secondAttribute="bottom" constant="8" id="YkZ-AQ-Hme"/>
+                                    <constraint firstItem="f0t-Kw-VVw" firstAttribute="leading" secondItem="0qO-3z-kJp" secondAttribute="leading" id="brB-BF-v1r"/>
+                                    <constraint firstItem="6QA-Nw-jPy" firstAttribute="centerX" secondItem="nAg-L0-i5y" secondAttribute="centerX" id="cu5-32-EbW"/>
+                                    <constraint firstAttribute="trailing" secondItem="Wy2-UV-km2" secondAttribute="trailing" constant="8" id="dx8-Kd-qBh"/>
+                                    <constraint firstAttribute="trailing" secondItem="CUq-Lt-NgJ" secondAttribute="trailing" constant="8" id="fUB-Mj-rQL"/>
+                                    <constraint firstItem="f0t-Kw-VVw" firstAttribute="leading" secondItem="h26-vJ-DMi" secondAttribute="leadingMargin" id="iZd-fJ-Uti"/>
+                                    <constraint firstItem="6QA-Nw-jPy" firstAttribute="leading" secondItem="h26-vJ-DMi" secondAttribute="leading" id="izH-6p-Mdt"/>
+                                    <constraint firstItem="nAg-L0-i5y" firstAttribute="top" secondItem="6QA-Nw-jPy" secondAttribute="bottom" constant="8" id="knA-np-iBJ"/>
+                                    <constraint firstItem="6QA-Nw-jPy" firstAttribute="top" secondItem="n0B-4N-EPn" secondAttribute="bottom" constant="8" id="olD-mg-IzA"/>
+                                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="n0B-4N-EPn" secondAttribute="trailing" constant="8" id="qfj-zz-gHN"/>
+                                    <constraint firstItem="Wy2-UV-km2" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="nAg-L0-i5y" secondAttribute="trailing" symbolic="YES" id="v3j-lM-e5x"/>
+                                    <constraint firstItem="n0B-4N-EPn" firstAttribute="leading" secondItem="f0t-Kw-VVw" secondAttribute="leading" id="w1f-iC-PYn"/>
+                                </constraints>
+                            </view>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="h26-vJ-DMi" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="8BJ-dX-Ttr"/>
+                            <constraint firstItem="h26-vJ-DMi" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="AeK-A9-Zqu"/>
+                            <constraint firstItem="h26-vJ-DMi" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="NjZ-g1-d74">
+                                <variation key="heightClass=compact-widthClass=regular" constant="40"/>
+                            </constraint>
+                            <constraint firstItem="h26-vJ-DMi" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="d9E-ja-uP2"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="commentsButton" destination="nAg-L0-i5y" id="4BG-dP-YBe"/>
+                        <outlet property="likesButton" destination="0qO-3z-kJp" id="h48-qY-92L"/>
+                        <outlet property="mainView" destination="8bC-Xf-vdC" id="tl6-4w-OSd"/>
+                        <outlet property="postDataLabel" destination="f0t-Kw-VVw" id="d3A-pW-aPq"/>
+                        <outlet property="postImage" destination="6QA-Nw-jPy" id="paq-3y-qcV"/>
+                        <outlet property="postView" destination="h26-vJ-DMi" id="8UL-vu-w6c"/>
+                        <outlet property="saveButton" destination="CUq-Lt-NgJ" id="DBS-Uz-bjT"/>
+                        <outlet property="shareButton" destination="Wy2-UV-km2" id="UnP-dd-DHB"/>
+                        <outlet property="titleLabel" destination="n0B-4N-EPn" id="Bur-BB-Ftd"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="41.984732824427482" y="-4.9295774647887329"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="arrow.up" catalog="system" width="118" height="128"/>
+        <image name="bookmark" catalog="system" width="110" height="128"/>
+        <image name="message" catalog="system" width="128" height="116"/>
+        <image name="square.and.arrow.up" catalog="system" width="115" height="128"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
 </document>
