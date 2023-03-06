@@ -8,11 +8,12 @@
 import Foundation
 import UIKit
 
-struct PostStruct : Codable{
+struct PostStruct : Codable {
     let data: PostData
 }
 
 struct PostData: Codable {
+    let after: String?
     let children: [PostDataChild]
 }
 

@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  PostViewController.swift
 //  Derkach02
 //
 //  Created by Kyrylo Derkach on 24.02.2023.
@@ -7,16 +7,16 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class PostViewController: UIViewController {
 
     @IBOutlet private var mainView: UIView!
     @IBOutlet private weak var postView: UIView!
+    @IBOutlet weak var scrollView: UIScrollView!
     
     @IBOutlet private weak var postDataLabel: UILabel!
     @IBOutlet private weak var titleLabel: UILabel!
     
     @IBOutlet private weak var postImage: UIImageView!
-    
     private var saved: Bool = Bool.random()
     
     @IBOutlet private weak var saveButton: UIButton!
@@ -24,21 +24,29 @@ class ViewController: UIViewController {
     @IBOutlet private weak var commentsButton: UIButton!
     @IBOutlet private weak var shareButton: UIButton!
     
+    private var post: (post: Post?, image: UIImage?)
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         initSaveButton()
-        
-        guard let post = getPostFromURL("https://www.reddit.com/r/ios/top.json?limit=1") else {
+        setFields()
+        // Do any additional setup after loading the view.
+    }
+    
+    func setPost(post: Post) {
+        self.post.post = post
+    }
+    
+    func setFields() {
+        guard let post = post.post else {
             return
         }
-        
         postDataLabel.text = buildPostDataString(for: post)
         titleLabel.text = post.title
-        loadImage(url: post.url)
+        loadImage(from: URL(string: post.url)!, imageView: postImage)
         likesButton.setTitle(String(post.score), for: .normal)
         commentsButton.setTitle(String(post.num_comments), for: .normal)
-        // Do any additional setup after loading the view.
     }
     
     func initSaveButton() {
@@ -50,16 +58,15 @@ class ViewController: UIViewController {
         }
     }
     
-    func loadImage(url: String) {
-        let url = URL(string: url)
-
-        DispatchQueue.global().async {
-            let data = try? Data(contentsOf: url!)
-            guard let data = data else {
-                return
-            }
-            DispatchQueue.main.async {
-                self.postImage.image = UIImage(data: data)
+    func getData(from url: URL, completion: @escaping (Data?, URLResponse?, Error?) -> ()) {
+        URLSession.shared.dataTask(with: url, completionHandler: completion).resume()
+    }
+    
+    func loadImage(from url: URL, imageView: UIImageView) {
+        getData(from: url) { data, response, error in
+            guard let data = data, error == nil else { return }
+            DispatchQueue.main.async() {
+                imageView.image = UIImage(data: data)
             }
         }
     }
