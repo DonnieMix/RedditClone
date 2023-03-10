@@ -7,7 +7,7 @@
 
 import UIKit
 
-class PostViewController: UIViewController {
+class PostDetailsViewController: UIViewController {
 
     @IBOutlet private var mainView: UIView!
     @IBOutlet private weak var postView: UIView!
@@ -17,14 +17,13 @@ class PostViewController: UIViewController {
     @IBOutlet private weak var titleLabel: UILabel!
     
     @IBOutlet private weak var postImage: UIImageView!
-    private var saved: Bool = Bool.random()
     
     @IBOutlet private weak var saveButton: UIButton!
     @IBOutlet private weak var likesButton: UIButton!
     @IBOutlet private weak var commentsButton: UIButton!
     @IBOutlet private weak var shareButton: UIButton!
     
-    private var post: (post: Post?, image: UIImage?)
+    private var post: PostDetails?
     
     
     override func viewDidLoad() {
@@ -34,23 +33,26 @@ class PostViewController: UIViewController {
         // Do any additional setup after loading the view.
     }
     
-    func setPost(post: Post) {
-        self.post.post = post
+    func setPost(post: PostDetails) {
+        self.post = post
     }
     
     func setFields() {
-        guard let post = post.post else {
+        guard let post = post else {
             return
         }
-        postDataLabel.text = buildPostDataString(for: post)
-        titleLabel.text = post.title
-        loadImage(from: URL(string: post.url)!, imageView: postImage)
-        likesButton.setTitle(String(post.score), for: .normal)
-        commentsButton.setTitle(String(post.num_comments), for: .normal)
+        postDataLabel.text = buildPostDataString(for: post.post)
+        titleLabel.text = post.post.title
+        postImage.image = post.image
+        likesButton.setTitle(String(post.post.score), for: .normal)
+        commentsButton.setTitle(String(post.post.num_comments), for: .normal)
     }
     
     func initSaveButton() {
-        if (!saved) {
+        guard let post = post else {
+            return
+        }
+        if (!post.isSaved) {
             saveButton.setImage(UIImage(systemName: "bookmark"), for: .normal)
         }
         else {
@@ -135,12 +137,15 @@ class PostViewController: UIViewController {
         guard let button = sender as? UIButton else {
             return
         }
-        if (saved) {
-            saved = false
+        guard let post = post else {
+            return
+        }
+        if (post.isSaved) {
+            post.isSaved = false
             button.setImage(UIImage(systemName: "bookmark"), for: .normal)
         }
         else {
-            saved = true
+            post.isSaved = true
             button.setImage(UIImage(systemName: "bookmark.fill"), for: .normal)
         }
     }
@@ -152,6 +157,16 @@ class PostViewController: UIViewController {
     }
     
     @IBAction func onShareClick(_ sender: Any) {
+        guard let permalink = post?.post.permalink else {
+            return
+        }
+        
+        let link = "https://www.reddit.com\(permalink)"
+        let activityViewController = UIActivityViewController(activityItems: [link], applicationActivities: nil)
+        DispatchQueue.main.async {[self] in
+            present(activityViewController, animated: true, completion: nil)
+        }
+        
     }
 }
 

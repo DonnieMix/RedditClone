@@ -21,15 +21,38 @@ class PostListCell : UITableViewCell {
     @IBOutlet weak var shareButton: UIButton!
     @IBOutlet weak var commsButton: UIButton!
     
-    func config(post: Post?) {
+    private var post: PostDetails?
+    
+    func config(post: PostDetails) {
+        self.post = post
+        let controller = PostDetailsViewController()
+        if let image = post.image {
+            postImageView.image = image
+        }
+        postDataLabel.text = controller.buildPostDataString(for: post.post)
+        postTitleLabel.text = post.post.title
+        if Reachability.isConnectedToNetwork() {
+            controller.loadImage(from: URL(string: post.post.url)!, imageView: postImageView)
+        }
+        post.isSaved ? saveButton.setImage(UIImage(systemName: "bookmark.fill"), for: .normal) : saveButton.setImage(UIImage(systemName: "bookmark"), for: .normal)
+        likesButton.setTitle(String(post.post.score), for: .normal)
+        commsButton.setTitle(String(post.post.num_comments), for: .normal)
+    }
+    
+    @IBAction func onSaveClick(_ sender: Any) {
+        guard let button = sender as? UIButton else {
+            return
+        }
         guard let post = post else {
             return
         }
-        let controller = PostViewController()
-        postDataLabel.text = controller.buildPostDataString(for: post)
-        postTitleLabel.text = post.title
-        controller.loadImage(from: URL(string: post.url)!, imageView: postImageView)
-        likesButton.setTitle(String(post.score), for: .normal)
-        commsButton.setTitle(String(post.num_comments), for: .normal)
+        if (post.isSaved) {
+            post.isSaved = false
+            button.setImage(UIImage(systemName: "bookmark"), for: .normal)
+        }
+        else {
+            post.isSaved = true
+            button.setImage(UIImage(systemName: "bookmark.fill"), for: .normal)
+        }
     }
 }
