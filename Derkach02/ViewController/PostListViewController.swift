@@ -9,27 +9,35 @@ import UIKit
 
 class PostListViewController : UIViewController {
     
-    private var cellAmount: [Int] = Array(0..<1000)
+    private var cellAmount: Int = 0
 
     private var loadedPosts: [PostDetails] = []
+    private var filteredPosts: [PostDetails] = []
     private var after: String? = nil
     
     private let group: DispatchGroup = DispatchGroup()
     private var processing: Bool = false
     private var toUpdate: Bool = false
+    private var isFilterPressed: Bool = false
+    
     
     struct Const {
         static let cellReuseIdentifier = "Post List Cell"
         static let showPost = "showPost"
     }
     
+    
+    @IBOutlet weak var filterSavedButton: UIButton!
+    @IBOutlet weak var searchField: UITextField!
     @IBOutlet private var postListView: UITableView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.postListView.delegate = self
+        self.searchField.delegate = self
         if Reachability.isConnectedToNetwork() {
             loadNextPosts(amount: 20)
+            filteredPosts = loadedPosts
             postListView.reloadData()
             savePostsToJson()
             for index in 0..<postListView.visibleCells.count {
@@ -38,6 +46,7 @@ class PostListViewController : UIViewController {
             }
         } else {
             loadedPosts = loadPostsFromJson()
+            filteredPosts = loadedPosts
             for row in 0..<postListView.numberOfRows(inSection: 0) {
                 postListView.reloadRows(at: [IndexPath(row: row, section: 0)], with: .automatic)
             }
@@ -49,8 +58,34 @@ class PostListViewController : UIViewController {
         cell.config(post: loadedPosts[index])
     }
     
+    @IBAction func onFilterSavedButtonClick(_ sender: Any) {
+        guard let button = sender as? UIButton else {
+            return
+        }
+        if isFilterPressed {
+            button.setImage(UIImage(systemName: "bookmark.circle"), for: .normal)
+            isFilterPressed = false
+            filteredPosts = loadedPosts
+            cellAmount = filteredPosts.count
+            postListView.reloadData()
+            
+            self.searchField.isHidden = true
+        } else {
+            button.setImage(UIImage(systemName: "bookmark.circle.fill"), for: .normal)
+            isFilterPressed = true
+            filteredPosts = loadedPosts.filter({$0.isSaved})
+            cellAmount = filteredPosts.count
+            postListView.reloadData()
+            
+            searchField.isHidden = false
+            UIView.animate(withDuration: 0.3) {
+                self.searchField.center.x -= self.view.bounds.width * (self.searchField.isHidden ? 1 : -1)
+            }
+        }
+    }
+    
     func loadNextPosts(amount: Int) {
-        cellAmount.append(contentsOf: Array(cellAmount.count..<cellAmount.count+20))
+        cellAmount += amount
         
         let endOfURL = (after != nil) ? "&after=\(after!)" : ""
         guard let url = URL(string: "https://www.reddit.com/r/ios/top.json?limit=\(amount)\(endOfURL)") else {
@@ -71,9 +106,13 @@ class PostListViewController : UIViewController {
         let posts = postDataChildren.map { $0.data }
         after = postStruct?.data.after
         loadedPosts.append(contentsOf: (posts.map { PostDetails(post: $0, isSaved: Bool.random()) }))
+        if Reachability.isConnectedToNetwork() {
+            for post in loadedPosts {
+                post.image = loadImage(from: URL(string: post.post.url)!)
+            }
+        }
+        filteredPosts = loadedPosts
         savePostsToJson()
-        
-        print(loadPostsFromJson())
     }
     
     func savePostsToJson() {
@@ -94,7 +133,7 @@ class PostListViewController : UIViewController {
                 let fileURL = documentsDirectory.appendingPathComponent("posts.json")
                 
                 try data.write(to: fileURL)
-                print("Writed to: \(fileURL)")
+                print("Written to: \(fileURL)")
             } catch {
                 print("Error encoding or saving posts: \(error)")
             }
@@ -139,7 +178,7 @@ class PostListViewController : UIViewController {
                 else {
                     return
                 }
-                let postToOpen = loadedPosts[index]
+                let postToOpen = filteredPosts[index]
                 nextVC.setPost(post: postToOpen)
             default:
                 break
@@ -152,8 +191,7 @@ extension PostListViewController: UITableViewDataSource {
     func tableView(
         _ tableView: UITableView,
         numberOfRowsInSection section: Int) -> Int {
-        //self.cellAmount.count
-            self.loadedPosts.count
+        self.cellAmount
     }
     
     func tableView(
@@ -163,14 +201,12 @@ extension PostListViewController: UITableViewDataSource {
         print("indexpath row \(indexPath.row), loadedPosts.count \(loadedPosts.count)")
         let cell = tableView.dequeueReusableCell(withIdentifier: Const.cellReuseIdentifier, for: indexPath) as! PostListCell
         if Reachability.isConnectedToNetwork() {
-            print("Internet connected")
             // if user is close to last loaded post and new portion isn't being loaded, start loading new portion
             if indexPath.row >= loadedPosts.count - 5 && !processing {
                 processing = true
                 group.enter()
                 DispatchQueue.global(qos: .default).async {[self] in
                     loadNextPosts(amount: 20)
-                    print("in <= 5")
                     toUpdate = true
                     group.leave()
                 }
@@ -183,7 +219,6 @@ extension PostListViewController: UITableViewDataSource {
                     group.enter()
                     DispatchQueue.global(qos: .default).async {[self] in
                         loadNextPosts(amount: 20)
-                        print("in while")
                         toUpdate = true
                         group.leave()
                     }
@@ -193,7 +228,7 @@ extension PostListViewController: UITableViewDataSource {
                 processing = false
             }
         }
-        cell.config(post: loadedPosts[indexPath.row])
+        cell.config(post: filteredPosts[indexPath.row])
         if toUpdate {
             postListView.reloadData()
             toUpdate = false
@@ -214,5 +249,20 @@ extension PostListViewController: UITableViewDelegate {
             withIdentifier: Const.showPost,
             sender: nil)
     }
+}
+
+extension PostListViewController: UITextFieldDelegate {
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let searchText = (textField.text! as NSString).replacingCharacters(in: range, with: string)
+        filteredPosts = searchText.isEmpty ?
+            (isFilterPressed ?
+                loadedPosts.filter({$0.isSaved}) :
+                loadedPosts)
+            : loadedPosts.filter({$0.isSaved}).filter { $0.post.title.range(of: searchText, options: .caseInsensitive) != nil }
+        self.cellAmount = filteredPosts.count
+            postListView.reloadData()
+            return true
+        }
 }
     

@@ -24,13 +24,98 @@ class PostDetailsViewController: UIViewController {
     @IBOutlet private weak var shareButton: UIButton!
     
     private var post: PostDetails?
+    private var bookmarkLayer: CAShapeLayer?
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
         initSaveButton()
         setFields()
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleDoubleTap))
+        tapGesture.numberOfTapsRequired = 2
+        postView.addGestureRecognizer(tapGesture)
         // Do any additional setup after loading the view.
+    }
+    
+    @objc func handleDoubleTap() {
+        if let existingBookmarkLayer = bookmarkLayer {
+            existingBookmarkLayer.removeAllAnimations()
+            existingBookmarkLayer.removeFromSuperlayer()
+            bookmarkLayer = nil
+        }
+        animateBookmarkIcon()
+        if !(post?.isSaved ?? true) {
+            onSaveClick(saveButton!)
+        }
+    }
+    
+    func animateBookmarkIcon() {
+        let width = scrollView.contentSize.width/10
+        let height = width + width/4
+        let regularBookmarkPath = getBookmarkScaledBezierPath(width: width, height: height)
+        
+        let smallWidth = width / 10
+        let smallHeight = height / 10
+        let smallBookmarkPath = getBookmarkScaledBezierPath(width: smallWidth, height: smallHeight)
+        
+        let popoutWidth = width * 1.2
+        let popoutHeight = height * 1.2
+        let popoutBookmarkPath = getBookmarkScaledBezierPath(width: popoutWidth, height: popoutHeight)
+        
+        bookmarkLayer = CAShapeLayer()
+        guard let bookmarkLayer = bookmarkLayer else {
+            return
+        }
+        bookmarkLayer.path = regularBookmarkPath.cgPath
+        bookmarkLayer.strokeColor = UIColor.white.cgColor
+        bookmarkLayer.fillColor = UIColor.white.cgColor
+        bookmarkLayer.lineWidth = 2.0
+        
+        scrollView.layer.addSublayer(bookmarkLayer)
+        
+        let popoutAnimation = CABasicAnimation(keyPath: "path")
+        popoutAnimation.duration = 0.1
+        popoutAnimation.fromValue = smallBookmarkPath.cgPath
+        popoutAnimation.toValue = popoutBookmarkPath.cgPath
+        popoutAnimation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        
+        bookmarkLayer.add(popoutAnimation, forKey: "popoutAnimation")
+        
+        let toRegularSizeAnimation = CABasicAnimation(keyPath: "path")
+        toRegularSizeAnimation.duration = 0.1
+        toRegularSizeAnimation.fromValue = popoutBookmarkPath.cgPath
+        toRegularSizeAnimation.toValue = regularBookmarkPath.cgPath
+        toRegularSizeAnimation.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        toRegularSizeAnimation.beginTime = CACurrentMediaTime() + 0.1
+        
+        bookmarkLayer.add(toRegularSizeAnimation, forKey: "toRegularSizeAnimation")
+        
+        let animationOut = CABasicAnimation(keyPath: "opacity")
+        animationOut.duration = 0.1
+        animationOut.fromValue = 1
+        animationOut.toValue = 0
+        animationOut.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        animationOut.beginTime = CACurrentMediaTime() + 1.0
+        
+        bookmarkLayer.add(animationOut, forKey: "opacityAnimationOut")
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.05) {
+            bookmarkLayer.removeFromSuperlayer()
+        }
+    }
+    
+    func getBookmarkScaledBezierPath(width: CGFloat, height: CGFloat) -> UIBezierPath {
+        let bookmarkPath = UIBezierPath()
+        let x = scrollView.contentSize.width/2 - width/2
+        let y = scrollView.contentSize.height/2 - height/2
+        bookmarkPath.move(to: CGPoint(x: x, y: y))
+        bookmarkPath.addLine(to: CGPoint(x: x + width, y: y+0))
+        bookmarkPath.addLine(to: CGPoint(x: x + width, y: y + height))
+        bookmarkPath.addLine(to: CGPoint(x: x + width/2, y: y + height/2 + height/8))
+        bookmarkPath.addLine(to: CGPoint(x: x+0, y: y + height))
+        bookmarkPath.close()
+        return bookmarkPath
     }
     
     func setPost(post: PostDetails) {
