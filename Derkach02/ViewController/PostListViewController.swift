@@ -108,7 +108,7 @@ class PostListViewController : UIViewController {
         loadedPosts.append(contentsOf: (posts.map { PostDetails(post: $0, isSaved: Bool.random()) }))
         if Reachability.isConnectedToNetwork() {
             for post in loadedPosts {
-                post.image = loadImage(from: URL(string: post.post.url)!)
+                post.image = loadImage(from: URL(string: post.post.url))
             }
         }
         filteredPosts = loadedPosts
@@ -158,7 +158,10 @@ class PostListViewController : UIViewController {
         URLSession.shared.dataTask(with: url, completionHandler: completion).resume()
     }
     
-    func loadImage(from url: URL) -> UIImage? {
+    func loadImage(from url: URL?) -> UIImage? {
+        guard let url = url else {
+            return nil
+        }
         var image: UIImage?
         getData(from: url) { data, response, error in
             guard let data = data, error == nil else { return }

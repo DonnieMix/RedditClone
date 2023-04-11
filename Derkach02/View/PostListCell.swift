@@ -29,11 +29,14 @@ class PostListCell : UITableViewCell {
         if let image = post.image {
             postImageView.image = image
         }
+        else {
+            if Reachability.isConnectedToNetwork() {
+                controller.loadImage(from: URL(string: post.post.url)!, imageView: postImageView)
+            }
+        }
         postDataLabel.text = controller.buildPostDataString(for: post.post)
         postTitleLabel.text = post.post.title
-        if Reachability.isConnectedToNetwork() {
-            controller.loadImage(from: URL(string: post.post.url)!, imageView: postImageView)
-        }
+        
         post.isSaved ? saveButton.setImage(UIImage(systemName: "bookmark.fill"), for: .normal) : saveButton.setImage(UIImage(systemName: "bookmark"), for: .normal)
         likesButton.setTitle(String(post.post.score), for: .normal)
         commsButton.setTitle(String(post.post.num_comments), for: .normal)

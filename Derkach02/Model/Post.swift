@@ -24,12 +24,14 @@ struct PostDataChild: Codable {
 struct Post: Codable {
     let author: String
     let domain: String
+    let subreddit: String
     let title: String
     let url: String
     let score: Int
     let num_comments: Int
     let created_utc: TimeInterval
     let permalink: String
+    let replies: CommentsStruct?
 }
 
 class PostDetails {
@@ -41,7 +43,7 @@ class PostDetails {
         self.post = post
         self.isSaved = isSaved
         DispatchQueue.main.async {
-            self.image = self.loadImage(from: URL(string: post.url)!)
+            self.image = self.loadImage(from: URL(string: post.url))
         }
     }
     
@@ -60,7 +62,10 @@ class PostDetails {
         URLSession.shared.dataTask(with: url, completionHandler: completion).resume()
     }
     
-    func loadImage(from url: URL) -> UIImage? {
+    func loadImage(from url: URL?) -> UIImage? {
+        guard let url = url else {
+            return nil
+        }
         var image: UIImage?
         getData(from: url) { data, response, error in
             guard let data = data, error == nil else { return }
@@ -81,6 +86,5 @@ struct PostDetailsForSaving: Codable {
         self.post = post.post
         self.isSaved = post.isSaved
         self.imageUrlString = post.image?.jpegData(compressionQuality: 1)?.base64EncodedString()
-        print(imageUrlString)
     }
 }

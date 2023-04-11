@@ -23,19 +23,58 @@ class PostDetailsViewController: UIViewController {
     @IBOutlet private weak var commentsButton: UIButton!
     @IBOutlet private weak var shareButton: UIButton!
     
+    @IBOutlet weak var commentList: UIView!
+    private var commentListViewController: CommentListViewController!
+    
     private var post: PostDetails?
     private var bookmarkLayer: CAShapeLayer?
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         initSaveButton()
         setFields()
         
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleDoubleTap))
-        tapGesture.numberOfTapsRequired = 2
-        postView.addGestureRecognizer(tapGesture)
+        commentListViewController = CommentListViewController()
+        commentList = commentListViewController.view
+        if let comments = loadCommentsForPost(post: post) {
+            commentListViewController.comments = comments
+        }
+        
+        
+        let doubleTapGesture = UITapGestureRecognizer(target: self, action: #selector(handleDoubleTap))
+        doubleTapGesture.numberOfTapsRequired = 2
+        postView.addGestureRecognizer(doubleTapGesture)
+        
         // Do any additional setup after loading the view.
+    }
+    
+    func loadCommentsForPost(post: PostDetails?) -> [Comment]? {
+        guard let permalink = post?.post.permalink else {
+            return nil
+        }
+        let urlString = "https://www.reddit.com\(permalink).json"
+        print(urlString)
+        guard let url = URL(string: urlString) else {
+                return nil
+            }
+                
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        let (data, _, _) = URLSession.shared.synchronousDataTask(urlrequest: request)
+        
+        guard let data = data else {
+            return nil
+        }
+        guard let totalJson = try? JSONSerialization.jsonObject(with: data, options: []) as? [[String: Any]],
+              let commentData = try? JSONSerialization.data(withJSONObject: totalJson[1], options: [])
+        else {
+            return nil
+        }
+        let commentsStruct = try? JSONDecoder().decode(CommentsStruct.self, from: commentData)
+        guard let commentsStruct = commentsStruct else {
+            return nil
+        }
+        return commentsStruct.data.children.map {$0.data}
     }
     
     @objc func handleDoubleTap() {
@@ -128,7 +167,11 @@ class PostDetailsViewController: UIViewController {
         }
         postDataLabel.text = buildPostDataString(for: post.post)
         titleLabel.text = post.post.title
-        postImage.image = post.image
+        if let image = post.image {
+            postImage.image = image
+        } else {
+            loadImage(from: URL(string: post.post.url), imageView: postImage)
+        }
         likesButton.setTitle(String(post.post.score), for: .normal)
         commentsButton.setTitle(String(post.post.num_comments), for: .normal)
     }
@@ -149,7 +192,10 @@ class PostDetailsViewController: UIViewController {
         URLSession.shared.dataTask(with: url, completionHandler: completion).resume()
     }
     
-    func loadImage(from url: URL, imageView: UIImageView) {
+    func loadImage(from url: URL?, imageView: UIImageView) {
+        guard let url = url else {
+            return
+        }
         getData(from: url) { data, response, error in
             guard let data = data, error == nil else { return }
             DispatchQueue.main.async() {
@@ -161,41 +207,9 @@ class PostDetailsViewController: UIViewController {
     func buildPostDataString(for post: Post) -> String {
         let author_fullname: String = post.author
         
-        let time: String = timeAgoSinceDate(Date(timeIntervalSince1970: post.created_utc))
+        let time: String = TimeAgoCalculator.timeAgoSinceDate(Date(timeIntervalSince1970: post.created_utc))
         let domain: String = post.domain
         return author_fullname + " • " + time + " • " + domain
-    }
-    
-    func timeAgoSinceDate(_ date: Date) -> String {
-        let calendar = Calendar.current
-        let now = Date()
-        let components = calendar.dateComponents([.year, .month, .weekOfYear, .day, .hour, .minute, .second], from: date, to: now)
-        if let year = components.year, year >= 1 {
-            let formatter = DateFormatter()
-            formatter.dateFormat = "dd MMM yyyy"
-            return formatter.string(from: date)
-        }
-        if let month = components.month, month >= 1 {
-            let formatter = DateFormatter()
-            formatter.dateFormat = "dd MMM"
-            return formatter.string(from: date)
-        }
-        if let weekOfYear = components.weekOfYear, weekOfYear >= 1 {
-            return "\(weekOfYear)w"
-        }
-        if let day = components.day, day >= 1 {
-            return "\(day)d"
-        }
-        if let hour = components.hour, hour >= 1 {
-            return "\(hour)h"
-        }
-        if let minute = components.minute, minute >= 1 {
-            return "\(minute)m"
-        }
-        if let second = components.second, second >= 3 {
-            return "\(second)s"
-        }
-        return "just now"
     }
     
     func getPostFromURL(_ url: String) -> Post? {
