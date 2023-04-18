@@ -222,10 +222,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="J3d-pa-B8j">
-                                <rect key="frame" x="14" y="58.999999999999986" width="365" height="140.66666666666663"/>
+                                <rect key="frame" x="14" y="59" width="365" height="759"/>
                                 <subviews>
-                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="h26-vJ-DMi">
-                                        <rect key="frame" x="0.0" y="0.0" width="365" height="140.66666666666666"/>
+                                    <view contentMode="scaleToFill" verticalHuggingPriority="252" verticalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="h26-vJ-DMi">
+                                        <rect key="frame" x="0.0" y="0.0" width="365" height="759"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Username" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f0t-Kw-VVw">
                                                 <rect key="frame" x="8" y="7.9999999999999982" width="78.333333333333329" height="20.333333333333329"/>
@@ -280,16 +280,26 @@
                                                     <action selector="onCommentClick:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Lm2-DR-WjQ"/>
                                                 </connections>
                                             </button>
+                                            <view contentMode="scaleToFill" verticalHuggingPriority="252" verticalCompressionResistancePriority="751" translatesAutoresizingMaskIntoConstraints="NO" id="eIR-g7-sVr" userLabel="Comments View">
+                                                <rect key="frame" x="0.0" y="133" width="365" height="9999"/>
+                                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" priority="999" constant="9999" id="coe-h0-1N2"/>
+                                                </constraints>
+                                            </view>
                                         </subviews>
                                         <color key="backgroundColor" red="0.0" green="0.3872535486811215" blue="0.0041995579230302855" alpha="0.22708227040816326" colorSpace="custom" customColorSpace="displayP3"/>
                                         <constraints>
                                             <constraint firstAttribute="trailing" secondItem="6QA-Nw-jPy" secondAttribute="trailing" id="1HV-CZ-ujo"/>
                                             <constraint firstItem="f0t-Kw-VVw" firstAttribute="top" secondItem="CUq-Lt-NgJ" secondAttribute="top" id="2Pb-7K-41V"/>
+                                            <constraint firstItem="eIR-g7-sVr" firstAttribute="top" secondItem="0qO-3z-kJp" secondAttribute="bottom" id="57A-lL-zZ5"/>
                                             <constraint firstItem="f0t-Kw-VVw" firstAttribute="top" secondItem="h26-vJ-DMi" secondAttribute="topMargin" id="Clm-Vu-1W2"/>
                                             <constraint firstItem="0qO-3z-kJp" firstAttribute="top" secondItem="6QA-Nw-jPy" secondAttribute="bottom" constant="8" id="DPD-wa-TpD"/>
                                             <constraint firstItem="nAg-L0-i5y" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="0qO-3z-kJp" secondAttribute="trailing" constant="8" symbolic="YES" id="Jvu-wY-7eW"/>
                                             <constraint firstItem="Wy2-UV-km2" firstAttribute="top" secondItem="6QA-Nw-jPy" secondAttribute="bottom" constant="8" id="L8B-93-pG9"/>
+                                            <constraint firstItem="eIR-g7-sVr" firstAttribute="leading" secondItem="h26-vJ-DMi" secondAttribute="leading" id="NNb-S6-F3j"/>
                                             <constraint firstItem="CUq-Lt-NgJ" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="f0t-Kw-VVw" secondAttribute="trailing" constant="8" id="OxP-Nh-8T8"/>
+                                            <constraint firstAttribute="trailing" secondItem="eIR-g7-sVr" secondAttribute="trailing" id="XPe-1Q-j2x"/>
                                             <constraint firstItem="n0B-4N-EPn" firstAttribute="top" secondItem="CUq-Lt-NgJ" secondAttribute="bottom" constant="8" id="YkZ-AQ-Hme"/>
                                             <constraint firstItem="f0t-Kw-VVw" firstAttribute="leading" secondItem="0qO-3z-kJp" secondAttribute="leading" id="brB-BF-v1r"/>
                                             <constraint firstItem="6QA-Nw-jPy" firstAttribute="centerX" secondItem="nAg-L0-i5y" secondAttribute="centerX" id="cu5-32-EbW"/>
@@ -298,7 +308,6 @@
                                             <constraint firstAttribute="trailing" secondItem="CUq-Lt-NgJ" secondAttribute="trailing" constant="8" id="fUB-Mj-rQL"/>
                                             <constraint firstItem="f0t-Kw-VVw" firstAttribute="leading" secondItem="h26-vJ-DMi" secondAttribute="leadingMargin" id="iZd-fJ-Uti"/>
                                             <constraint firstItem="nAg-L0-i5y" firstAttribute="top" secondItem="6QA-Nw-jPy" secondAttribute="bottom" constant="8" id="knA-np-iBJ"/>
-                                            <constraint firstAttribute="bottom" secondItem="0qO-3z-kJp" secondAttribute="bottom" constant="8" id="l23-kJ-cBn"/>
                                             <constraint firstItem="6QA-Nw-jPy" firstAttribute="top" secondItem="n0B-4N-EPn" secondAttribute="bottom" constant="8" id="olD-mg-IzA"/>
                                             <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="n0B-4N-EPn" secondAttribute="trailing" constant="8" id="qfj-zz-gHN"/>
                                             <constraint firstItem="Wy2-UV-km2" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="nAg-L0-i5y" secondAttribute="trailing" constant="8" symbolic="YES" id="v3j-lM-e5x"/>
@@ -307,39 +316,29 @@
                                     </view>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstAttribute="bottom" secondItem="h26-vJ-DMi" secondAttribute="bottom" id="At5-MX-k83"/>
                                     <constraint firstItem="h26-vJ-DMi" firstAttribute="centerX" secondItem="J3d-pa-B8j" secondAttribute="centerX" id="FbG-6X-wAp"/>
-                                    <constraint firstItem="h26-vJ-DMi" firstAttribute="bottom" secondItem="Abh-ET-1lU" secondAttribute="bottom" id="J7z-4X-sj1"/>
-                                    <constraint firstItem="h26-vJ-DMi" firstAttribute="top" secondItem="mye-2y-xjQ" secondAttribute="top" id="REA-Dk-8Kg"/>
-                                    <constraint firstItem="h26-vJ-DMi" firstAttribute="trailing" secondItem="J3d-pa-B8j" secondAttribute="trailing" id="tO2-F1-noF"/>
-                                    <constraint firstItem="h26-vJ-DMi" firstAttribute="top" secondItem="J3d-pa-B8j" secondAttribute="top" id="uZ3-j2-iMg"/>
-                                    <constraint firstItem="h26-vJ-DMi" firstAttribute="leading" secondItem="J3d-pa-B8j" secondAttribute="leading" id="wme-3F-eg5"/>
+                                    <constraint firstItem="mye-2y-xjQ" firstAttribute="bottom" secondItem="h26-vJ-DMi" secondAttribute="bottom" id="an0-Si-PXf"/>
+                                    <constraint firstItem="h26-vJ-DMi" firstAttribute="top" secondItem="mye-2y-xjQ" secondAttribute="top" id="eQZ-22-LRZ"/>
+                                    <constraint firstItem="h26-vJ-DMi" firstAttribute="bottom" secondItem="Abh-ET-1lU" secondAttribute="bottom" id="jaz-y7-wYM"/>
+                                    <constraint firstItem="h26-vJ-DMi" firstAttribute="trailing" secondItem="mye-2y-xjQ" secondAttribute="trailing" id="tO2-F1-noF"/>
+                                    <constraint firstItem="h26-vJ-DMi" firstAttribute="leading" secondItem="mye-2y-xjQ" secondAttribute="leading" id="wme-3F-eg5"/>
                                 </constraints>
                                 <viewLayoutGuide key="contentLayoutGuide" id="mye-2y-xjQ"/>
                                 <viewLayoutGuide key="frameLayoutGuide" id="Abh-ET-1lU"/>
                             </scrollView>
-                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="GJb-To-SU0">
-                                <rect key="frame" x="14" y="200" width="365" height="618"/>
-                                <connections>
-                                    <segue destination="iFb-CF-vhP" kind="embed" id="Smn-bQ-G9a"/>
-                                </connections>
-                            </containerView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="J3d-pa-B8j" secondAttribute="trailing" constant="14" id="14k-ww-ceT"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="J3d-pa-B8j" secondAttribute="trailing" constant="14" id="14k-ww-ceT"/>
                             <constraint firstItem="J3d-pa-B8j" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="MEs-wV-3hA"/>
-                            <constraint firstItem="GJb-To-SU0" firstAttribute="top" secondItem="J3d-pa-B8j" secondAttribute="bottom" id="QMC-uB-ttp"/>
                             <constraint firstItem="J3d-pa-B8j" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="14" id="WHd-Pa-64L"/>
-                            <constraint firstItem="J3d-pa-B8j" firstAttribute="trailing" secondItem="GJb-To-SU0" secondAttribute="trailing" id="dIm-0O-hKr"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="GJb-To-SU0" secondAttribute="bottom" id="fJK-Uq-1M8"/>
-                            <constraint firstItem="GJb-To-SU0" firstAttribute="leading" secondItem="J3d-pa-B8j" secondAttribute="leading" id="mnX-aP-dkl"/>
+                            <constraint firstItem="J3d-pa-B8j" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" id="aoR-ZV-2Gh"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="XIH-0T-868"/>
                     <connections>
-                        <outlet property="commentList" destination="GJb-To-SU0" id="YlF-jn-u28"/>
+                        <outlet property="commentListContainerView" destination="eIR-g7-sVr" id="pWq-tw-SUk"/>
                         <outlet property="commentsButton" destination="nAg-L0-i5y" id="4BG-dP-YBe"/>
                         <outlet property="likesButton" destination="0qO-3z-kJp" id="h48-qY-92L"/>
                         <outlet property="mainView" destination="8bC-Xf-vdC" id="tl6-4w-OSd"/>
@@ -355,20 +354,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="41.984732824427482" y="-4.9295774647887329"/>
-        </scene>
-        <!--Comment List View Controller-->
-        <scene sceneID="f1r-mi-M9d">
-            <objects>
-                <viewController id="iFb-CF-vhP" customClass="CommentListViewController" customModule="Derkach02" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="OSj-Ki-BQm">
-                        <rect key="frame" x="0.0" y="0.0" width="365" height="618"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="kDg-tu-ceT" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-723" y="-632"/>
         </scene>
     </scenes>
     <resources>

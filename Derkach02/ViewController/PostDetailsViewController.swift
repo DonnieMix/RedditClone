@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SwiftUI
 
 class PostDetailsViewController: UIViewController {
 
@@ -23,8 +24,7 @@ class PostDetailsViewController: UIViewController {
     @IBOutlet private weak var commentsButton: UIButton!
     @IBOutlet private weak var shareButton: UIButton!
     
-    @IBOutlet weak var commentList: UIView!
-    private var commentListViewController: CommentListViewController!
+    @IBOutlet private weak var commentListContainerView: UIView!
     
     private var post: PostDetails?
     private var bookmarkLayer: CAShapeLayer?
@@ -34,12 +34,20 @@ class PostDetailsViewController: UIViewController {
         initSaveButton()
         setFields()
         
-        commentListViewController = CommentListViewController()
-        commentList = commentListViewController.view
-        if let comments = loadCommentsForPost(post: post) {
-            commentListViewController.comments = comments
-        }
+        let swiftUIListView = CommentListView(comments: loadCommentsForPost(post: post))
+        let commentListViewController: UIViewController = UIHostingController(rootView: swiftUIListView)
+        let commentListView: UIView = commentListViewController.view
+        self.commentListContainerView.addSubview(commentListView)
         
+        commentListView.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            commentListView.topAnchor.constraint(equalTo: self.commentListContainerView.topAnchor),
+            commentListView.bottomAnchor.constraint(equalTo: self.commentListContainerView.bottomAnchor),
+            commentListView.trailingAnchor.constraint(equalTo: self.commentListContainerView.trailingAnchor),
+            commentListView.leadingAnchor.constraint(equalTo: self.commentListContainerView.leadingAnchor)
+        ])
+        commentListViewController.didMove(toParent: self)
         
         let doubleTapGesture = UITapGestureRecognizer(target: self, action: #selector(handleDoubleTap))
         doubleTapGesture.numberOfTapsRequired = 2
@@ -48,12 +56,15 @@ class PostDetailsViewController: UIViewController {
         // Do any additional setup after loading the view.
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        scrollView.contentSize = CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height+100)
+    }
+    
     func loadCommentsForPost(post: PostDetails?) -> [Comment]? {
         guard let permalink = post?.post.permalink else {
             return nil
         }
         let urlString = "https://www.reddit.com\(permalink).json"
-        print(urlString)
         guard let url = URL(string: urlString) else {
                 return nil
             }
